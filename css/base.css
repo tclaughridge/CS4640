@@ -1,0 +1,17 @@
+/* BUTTONS */
+
+.button-primary {
+    background-color: #232D4B !important;
+    color: white !important;
+}
+
+.button-primary:hover {
+    background-color: #3e4d7b !important;
+    color: white !important;
+}
+
+/* TEXT */
+
+.text-primary {
+    color: #e57200 !important;
+}
