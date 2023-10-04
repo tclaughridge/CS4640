@@ -1,3 +1,11 @@
+/* FORMATTING */
+
+@media (max-width: 768px) {
+    .divider {
+        display: none;
+    }
+}
+
 /* BUTTONS */
 
 .button-primary {
