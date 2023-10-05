@@ -1,11 +1,15 @@
+/* 
+Temporarily using HTML's built in local storage to store and retrieve username 
+and password. This is not secure and will be replaced with a database in the future, 
+it's really just to satisfy the user input requirement for Sprint 2.
+*/
+
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
   const loginButton = document.getElementById("loginButton");
   const usernameDisplay = document.getElementById("usernameDisplay");
   const loginButtonContainer = document.getElementById("loginButtonContainer");
-  const usernameDisplayContainer = document.getElementById(
-    "usernameDisplayContainer"
-  );
+  const usernameDisplayContainer = document.getElementById("usernameDisplayContainer");
 
   // Check if the user is logged in and display their username
   const storedUsername = localStorage.getItem("username");
