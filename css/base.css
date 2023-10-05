@@ -1,5 +1,13 @@
 /* FORMATTING */
 
+body {
+    font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', sans-serif !important;
+}
+
+.logo {
+    font-weight: 300 !important;
+}
+
 @media (max-width: 768px) {
     .divider {
         display: none;
@@ -9,17 +17,26 @@
 /* BUTTONS */
 
 .button-primary {
-    background-color: #232D4B !important;
+    background: linear-gradient(to right, #232d4b, #394567) !important;
     color: white !important;
 }
 
 .button-primary:hover {
-    background-color: #3e4d7b !important;
+    background: linear-gradient(to right, #394567, #4d5a7f) !important;
     color: white !important;
 }
 
 /* TEXT */
 
 .text-primary {
-    color: #e57200 !important;
+    background: linear-gradient(to right, #e57200, #ee8d2c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* BACKGROUNDS */
+
+.background-primary {
+    background: linear-gradient(to right, #e57200, #ee8d2c) !important;
 }
