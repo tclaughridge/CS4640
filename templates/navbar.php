@@ -6,10 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <meta name="author" content="Thomas Laughridge & Catherine Sublett">
-        <meta name="description" content="Home Page">
-        <meta name="keywords" content="uva list map wahoomaps">
-
-        <title>Home | WahooMaps</title>
+        <meta name="description" content="Navbar">
 
         <!-- CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -26,7 +23,7 @@
         <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
             <div class="container">
-                <a class="navbar-brand logo" href="index.html">
+                <a class="navbar-brand logo" href="?command=welcome">
                     <img src="images/logo-stroke.png" alt="Bootstrap" width="30" height="30">
                     WahooMaps
                 </a>
@@ -39,16 +36,32 @@
                     <!-- Navigation Left -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" href="index.html">Home</a>
+                            <?php if($this->input["command"] == "welcome") { ?>
+                                <a class="nav-link active" href="?command=welcome">Home</a>
+                            <?php } else { ?>
+                                <a class="nav-link" href="?command=welcome">Home</a>
+                            <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="map.html">Map</a>
+                            <?php if($this->input["command"] == "map") { ?>
+                                <a class="nav-link active" href="?command=map">Map</a>
+                            <?php } else { ?>
+                                <a class="nav-link" href="?command=map">Map</a>
+                            <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="list.html">List</a>
+                            <?php if($this->input["command"] == "list") { ?>
+                                <a class="nav-link active" href="?command=list">List</a>
+                            <?php } else { ?>
+                                <a class="nav-link" href="?command=list">List</a>
+                            <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
+                            <?php if($this->input["command"] == "about") { ?>
+                                <a class="nav-link active" href="?command=about">About</a>
+                            <?php } else { ?>
+                                <a class="nav-link" href="?command=about">About</a>
+                            <?php } ?>
                         </li>
                     </ul>
                     <!-- Login / Username Display-->
@@ -63,40 +76,6 @@
                 </div>
             </div>
         </nav>
-
-        <!-- Welcome Banner -->
-        <div class="container-sm">
-            <div class="p-5 my-5 bg-body-tertiary rounded-3 width-100">
-                <div class="row">
-                    <div class="col-md">
-                        <img class="img-fluid rounded-3" src="images/rotunda.jpg" alt="Rotunda">
-                    </div>
-                    <div class="col-md my-auto">
-                        <h1 class="display-2 fw-bold mt-4 text-primary">Welcome!</h1>
-                        <p class="fs-4 mt-4">This site is a comprehensive collection of information about on-grounds resources available to students.</p>
-                        <p class="fs-4">Here you can find an interactive map of grounds, as well as a list of amenities available to students and where to find them!</p>
-                        <a href="map.html" class="btn btn-lg mt-4 button-primary" tabindex="-1" role="button">Explore</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <footer class="py-3">
-            <div class="nav justify-content-center mb-3">
-                <a class="navbar-brand logo" href="index.html">
-                    <img src="images/logo.png" alt="Bootstrap" width="30" height="30">
-                    WahooMaps
-                </a>
-            </div>
-            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-                <li class="nav-item"><a href="index.html" class="nav-link px-2 text-body-secondary">Home</a></li>
-                <li class="nav-item"><a href="map.html" class="nav-link px-2 text-body-secondary">Map</a></li>
-                <li class="nav-item"><a href="list.html" class="nav-link px-2 text-body-secondary">List</a></li>
-                <li class="nav-item"><a href="about.html" class="nav-link px-2 text-body-secondary">About</a></li>
-            </ul>
-            <p class="text-center text-body-secondary my-3">© 2023 Thomas Laughridge & Catherine Sublett</p>
-        </footer>
 
         <!-- Login Modal -->
         <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
