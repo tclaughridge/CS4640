@@ -93,6 +93,9 @@ class FrontController {
 
     /**
      * Handle user registration and log-in
+     * 
+     * 
+     * This is probably broken right now... needs to be modified further to support account creation
      */
     public function login() {
         // need a name, email, and password
@@ -102,29 +105,40 @@ class FrontController {
 
                 // Check if user is in database
                 $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
-                if (empty($res)) {
-                    // User was not there, so insert them
-                    $this->db->query("insert into users (name, email, password, score) values ($1, $2, $3, $4);",
-                        $_POST["fullname"], $_POST["email"],
-                        password_hash($_POST["passwd"], PASSWORD_DEFAULT), 0);
-                    $_SESSION["name"] = $_POST["fullname"];
-                    $_SESSION["email"] = $_POST["email"];
-                    $_SESSION["score"] = 0;
-                    // Send user to the appropriate page (home)
-                    header("Location: ?command=home");
-                    return;
-                } else {
+                if (!empty($res)) {
                     // User was in the database, verify password
                     if (password_verify($_POST["passwd"], $res[0]["password"])) {
                         // Password was correct
                         $_SESSION["name"] = $res[0]["name"];
                         $_SESSION["email"] = $res[0]["email"];
-                        $_SESSION["score"] = $res[0]["score"];
                         header("Location: ?command=home");
                         return;
                     } else {
                         $this->errorMessage = "Incorrect password.";
                     }
+                } else {
+                    // User not in database, go to sign up
+                    $this->signup();
+                }
+        } else {
+            $this->errorMessage = "Name, email, and password are required.";
+        }
+        // If something went wrong, show the welcome page again
+        $this->showHome();
+    }
+
+    public function signup() {
+        if(isset($_POST["fullname"]) && !empty($_POST["fullname"]) &&
+            isset($_POST["email"]) && !empty($_POST["email"]) &&
+            isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
+
+                // Check if user is in database
+                $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
+                if (empty($res)) {
+                    // User not in database, add them
+                } else {
+                    // User in database, redirect home
+                    $this->showHome();
                 }
         } else {
             $this->errorMessage = "Name, email, and password are required.";

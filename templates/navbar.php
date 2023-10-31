@@ -28,36 +28,36 @@
                     WahooMaps
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse" id="navbar">
                     <!-- Navigation Left -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <?php if($this->input["command"] == "welcome") { ?>
+                            <?php if ($this->input["command"] == "welcome") { ?>
                                 <a class="nav-link active" href="?command=welcome">Home</a>
                             <?php } else { ?>
                                 <a class="nav-link" href="?command=welcome">Home</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <?php if($this->input["command"] == "map") { ?>
+                            <?php if ($this->input["command"] == "map") { ?>
                                 <a class="nav-link active" href="?command=map">Map</a>
                             <?php } else { ?>
                                 <a class="nav-link" href="?command=map">Map</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <?php if($this->input["command"] == "list") { ?>
+                            <?php if ($this->input["command"] == "list") { ?>
                                 <a class="nav-link active" href="?command=list">List</a>
                             <?php } else { ?>
                                 <a class="nav-link" href="?command=list">List</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <?php if($this->input["command"] == "about") { ?>
+                            <?php if ($this->input["command"] == "about") { ?>
                                 <a class="nav-link active" href="?command=about">About</a>
                             <?php } else { ?>
                                 <a class="nav-link" href="?command=about">About</a>
@@ -86,19 +86,20 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="loginForm">
+                        <form action="?command=login" method="post">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="email" name="email">
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                                <label for="passwd" class="form-label">Password</label>
+                                <input type="passwd" class="form-control" id="passwd" name="passwd" aria-describedby="emailHelp">
                             </div>
+                            <div id="signup" class="form-text text-left">Don't have an account? <a href="?command=signup" style="text-decoration: none;">Sign Up</a></div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary button-primary" id="loginButton" data-bs-dismiss="modal">Login</button>
+                        <button type="submit" class="btn btn-primary button-primary" id="loginButton" data-bs-dismiss="modal">Login</button>
                     </div>
                 </div>
             </div>
