@@ -11,8 +11,7 @@ class FrontController {
      */
     public function __construct($input) {
         session_start();
-        // $this->db = new Database();
-        
+        $this->db = new Database();
         $this->input = $input;
     }
 
@@ -32,6 +31,9 @@ class FrontController {
         switch($command) {
             case "login":
                 $this->login();
+            case "signup":
+                $this->signup();
+                break;
             case "logout":
                 $this->logout();
             case "map":
@@ -52,7 +54,7 @@ class FrontController {
     /**
      * Display a given page.
      */
-    public function display($page) {
+    public function display($page, $message = "") {
         include "templates/navbar.php";
         include "templates/$page.php";
         include "templates/footer.php";
@@ -67,28 +69,36 @@ class FrontController {
         if (!empty($this->errorMessage)) {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
-        $this->display("home");
+        $this->display("home", $message);
     }
     public function showMap() {
         $message = "";
         if (!empty($this->errorMessage)) {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
-        $this->display("map");
+        $this->display("map", $message);
     }
     public function showList() {
         $message = "";
         if (!empty($this->errorMessage)) {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
-        $this->display("list");
+        $this->display("list", $message);
     }
     public function showAbout() {
         $message = "";
         if (!empty($this->errorMessage)) {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
-        $this->display("about");
+        $this->display("about", $message);
+    }
+    public function showSignup() {
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
+        }
+        include "templates/signup.php";
+        // ^^ modify later to include from src/ directory
     }
 
     /**
@@ -98,53 +108,51 @@ class FrontController {
      * This is probably broken right now... needs to be modified further to support account creation
      */
     public function login() {
-        // need a name, email, and password
-        if(isset($_POST["fullname"]) && !empty($_POST["fullname"]) &&
-            isset($_POST["email"]) && !empty($_POST["email"]) &&
-            isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
+        // need an email and password
+        if (isset($_POST["email"]) && !empty($_POST["email"]) && isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
 
-                // Check if user is in database
-                $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
-                if (!empty($res)) {
-                    // User was in the database, verify password
-                    if (password_verify($_POST["passwd"], $res[0]["password"])) {
-                        // Password was correct
-                        $_SESSION["name"] = $res[0]["name"];
-                        $_SESSION["email"] = $res[0]["email"];
-                        header("Location: ?command=home");
-                        return;
-                    } else {
-                        $this->errorMessage = "Incorrect password.";
-                    }
+            // Check if user is in database
+            $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
+            if (!empty($res)) {
+                // User was in the database, verify password
+                if (password_verify($_POST["passwd"], $res[0]["password"])) {
+                    // Password was correct
+                    $_SESSION["name"] = $res[0]["name"];
+                    $_SESSION["email"] = $res[0]["email"];
+                    header("Location: ?command=home");
+                    return;
                 } else {
-                    // User not in database, go to sign up
-                    $this->signup();
+                    $this->errorMessage = "Incorrect password.";
                 }
+            } else {
+                // User not in database, go to sign up
+                $this->signup();
+            }
         } else {
-            $this->errorMessage = "Name, email, and password are required.";
+            $this->errorMessage = "Please enter your email and password.";
         }
         // If something went wrong, show the welcome page again
         $this->showHome();
     }
 
     public function signup() {
-        if(isset($_POST["fullname"]) && !empty($_POST["fullname"]) &&
-            isset($_POST["email"]) && !empty($_POST["email"]) &&
-            isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
+        $this->showSignup();
 
-                // Check if user is in database
-                $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
-                if (empty($res)) {
-                    // User not in database, add them
-                } else {
-                    // User in database, redirect home
-                    $this->showHome();
-                }
+        if (isset($_POST["email"]) && !empty($_POST["email"]) && isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
+
+            // Check if user is in database
+            $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
+            if (empty($res)) {
+                // User not in database, add them
+
+                // ...
+            } else {
+                // User in database, redirect home
+                $this->showHome();
+            }
         } else {
             $this->errorMessage = "Name, email, and password are required.";
         }
-        // If something went wrong, show the welcome page again
-        $this->showHome();
     }
 
     /**
