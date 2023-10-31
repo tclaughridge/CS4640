@@ -41,12 +41,12 @@
                         <div class="col-md mb-4-md">
                             <img src="images/thomas.jpg" class="rounded-circle mx-auto d-block" width="150" height="150" alt="thomas">
                             <h4 class="text-center mt-3">Thomas Laughridge</h4>
-                            <p class="text-center">Thomas is a fourth year Computer Science and Cognitive Science student at the University of Virginia. </p>
+                            <p class="text-center px-4-md">Thomas is a fourth year Computer Science and Cognitive Science student at the University of Virginia. </p>
                         </div>
                         <div class="col-md">
                             <img src="images/catherine.jpg" class="rounded-circle mx-auto d-block" width="150" height="150" alt="catherine">
                             <h4 class="text-center mt-3">Catherine Sublett</h4>
-                            <p class="text-center">Catherine is a fourth year Biomedical Engineering student with a minor in Computer Science at the University of Virginia.</p>
+                            <p class="text-center px-4-md">Catherine is a fourth year Biomedical Engineering student with a minor in Computer Science at the University of Virginia.</p>
                         </div>
                     </div>
                 </div>
