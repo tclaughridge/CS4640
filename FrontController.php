@@ -24,18 +24,21 @@ class FrontController {
      */
     public function run() {
         // Get the command
-        $command = "welcome";
-        if (isset($this->input["command"]))
+        $command = "home";
+        if (isset($this->input["command"])) {
             $command = $this->input["command"];
+        }
 
         switch($command) {
             case "login":
                 $this->login();
+                break;
             case "signup":
                 $this->signup();
                 break;
             case "logout":
                 $this->logout();
+                break;
             case "map":
                 $this->showMap();
                 break;
@@ -98,14 +101,12 @@ class FrontController {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
         include "templates/signup.php";
+        include "templates/footer.php";
         // ^^ modify later to include from src/ directory
     }
 
     /**
-     * Handle user registration and log-in
-     * 
-     * 
-     * This is probably broken right now... needs to be modified further to support account creation
+     * Handle user log-in
      */
     public function login() {
         // need an email and password
@@ -117,8 +118,9 @@ class FrontController {
                 // User was in the database, verify password
                 if (password_verify($_POST["passwd"], $res[0]["password"])) {
                     // Password was correct
-                    $_SESSION["name"] = $res[0]["name"];
+                    $_SESSION["username"] = $res[0]["username"];
                     $_SESSION["email"] = $res[0]["email"];
+                    $_SESSION["signedin"] = true;
                     header("Location: ?command=home");
                     return;
                 } else {
@@ -135,31 +137,60 @@ class FrontController {
         $this->showHome();
     }
 
+    /**
+     * Handle user registration
+     */
     public function signup() {
         $this->showSignup();
 
-        if (isset($_POST["email"]) && !empty($_POST["email"]) && isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
-
+        if (isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["email"]) 
+        && !empty($_POST["email"]) && isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
             // Check if user is in database
             $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
             if (empty($res)) {
                 // User not in database, add them
-
-                // ...
+                $this->db->query(
+                    "insert into users (username, email, password) values ($1, $2, $3);",
+                    $_POST["username"],
+                    $_POST["email"],
+                    password_hash($_POST["passwd"], PASSWORD_DEFAULT)
+                );
+                $_SESSION["username"] = $_POST["username"];
+                $_SESSION["email"] = $_POST["email"];
+                $_SESSION["signedin"] = true;
+                return;
             } else {
-                // User in database, redirect home
+                // User in database, redirect to home
+                $this->errorMessage = "There is already an account associated with this email, please sign in.";
                 $this->showHome();
             }
         } else {
-            $this->errorMessage = "Name, email, and password are required.";
+            $this->errorMessage = "Username, email, and password are required.";
         }
     }
 
     /**
      * Log out the user
      */
-     public function logout() {
+    public function logout() {
         session_destroy();
+        header("Location: ?command=home");
         session_start();
+    }
+
+    public function returnUserInfo() {
+        $res = $this->db->query("select * from users where email = $1;", $_SESSION["email"]);
+        if (!empty($res)) {
+            $user = $res[0];
+            $userInfo = array(
+                "username" => $user["username"],
+                "email" => $user["email"]
+            );
+            header('Content-Type: application/json');
+            echo json_encode($userInfo);
+        } else {
+            header('HTTP/1.1 404 Not Found');
+            echo "User not found";
+        }
     }
 }

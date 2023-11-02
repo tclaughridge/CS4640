@@ -20,7 +20,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script src="js/login.js"></script>
 
-        <!-- SITE URL: https://cs4640.cs.virginia.edu/tcl5tu/sprint2/index.html -->
     </head>
     <body>
         <!-- Welcome Banner -->
@@ -34,7 +33,7 @@
                         <h1 class="display-2 fw-bold mt-4 text-primary">Welcome!</h1>
                         <p class="fs-4 mt-4">This site is a comprehensive collection of information about on-grounds resources available to students.</p>
                         <p class="fs-4">Here you can find an interactive map of grounds, as well as a list of amenities available to students and where to find them!</p>
-                        <a href="map.html" class="btn btn-lg mt-4 button-primary" tabindex="-1" role="button">Explore</a>
+                        <a href="?command=map" class="btn btn-lg mt-4 button-primary" tabindex="-1" role="button">Explore</a>
                     </div>
                 </div>
             </div>

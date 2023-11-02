@@ -20,7 +20,7 @@
         <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
             <div class="container">
-                <a class="navbar-brand logo" href="?command=welcome">
+                <a class="navbar-brand logo" href="?command=home">
                     <img src="images/logo-stroke.png" alt="Bootstrap" width="30" height="30">
                     WahooMaps
                 </a>
@@ -33,10 +33,10 @@
                     <!-- Navigation Left -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <?php if ($this->input["command"] == "welcome") { ?>
-                                <a class="nav-link active" href="?command=welcome">Home</a>
+                            <?php if ($this->input["command"] == "home") { ?>
+                                <a class="nav-link active" href="?command=home">Home</a>
                             <?php } else { ?>
-                                <a class="nav-link" href="?command=welcome">Home</a>
+                                <a class="nav-link" href="?command=home">Home</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
@@ -63,12 +63,18 @@
                     </ul>
                     <!-- Login / Username Display-->
                     <ul class="navbar-nav d-flex">
-                        <li class="nav-item" id="loginButtonContainer">
+                        <?php if (isset($_SESSION["signedin"]) && $_SESSION["signedin"]) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#"><?= $_SESSION["username"] ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="?command=logout">Logout</a>
+                            </li> 
+                        <?php } else { ?>
+                            <li class="nav-item" id="loginButtonContainer">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
-                        </li>
-                        <li class="nav-item" id="usernameDisplayContainer" style="display: none;">
-                            <span class="navbar-text active" id="usernameDisplay"></span>
-                        </li>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>

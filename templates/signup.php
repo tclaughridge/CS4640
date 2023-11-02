@@ -16,8 +16,35 @@
         <!-- JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
+        <title>Sign Up | WahooMaps</title>
     </head>
     <body>
-        <h1>Test</h1>
+        <div class="container">
+            <div class="bg-light rounded-3 my-5">
+                <h3 class="fw-bold text-center text-primary pt-4 my-4">Create Your Account</h3>
+                <form action="?command=home" method="post" id="signupForm" class="my-4 px-5 pb-5">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback">Please enter a username</div>
+                    </div>
+                    <div class="mb-5">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="passwd" name="passwd" required>
+                        <div class="invalid-feedback">Please enter a password.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary button-primary text-center w-100" id="loginButton">Create your account</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </body>
 </html>
