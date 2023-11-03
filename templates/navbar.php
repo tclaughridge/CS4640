@@ -9,19 +9,21 @@
         <meta name="description" content="Navbar">
 
         <!-- CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link href="css/base.css" rel="stylesheet">
         <link href="css/nav.css" rel="stylesheet">
 
         <!-- JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </head>
     <body>
         <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
             <div class="container">
                 <a class="navbar-brand logo" href="?command=home">
-                    <img src="images/logo-stroke.png" alt="Bootstrap" width="30" height="30">
+                    <img src="images/logo-stroke.png" alt="logo" width="30" height="30">
                     WahooMaps
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -33,30 +35,42 @@
                     <!-- Navigation Left -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <?php if ($this->input["command"] == "home") { ?>
+                            <?php if (isset($this->input["command"])) { 
+                            if ($this->input["command"] == "home" || $this->input["command"] == "login") { ?>
                                 <a class="nav-link active" href="?command=home">Home</a>
                             <?php } else { ?>
                                 <a class="nav-link" href="?command=home">Home</a>
+                            <?php }} else { ?>
+                                <a class="nav-link active" href="?command=home">Home</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <?php if ($this->input["command"] == "map") { ?>
+                            <?php if (isset($this->input["command"])) { 
+                            if ($this->input["command"] == "map") { ?>
                                 <a class="nav-link active" href="?command=map">Map</a>
                             <?php } else { ?>
+                                <a class="nav-link" href="?command=map">Map</a>
+                            <?php }} else { ?>
                                 <a class="nav-link" href="?command=map">Map</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <?php if ($this->input["command"] == "list") { ?>
+                            <?php if (isset($this->input["command"])) { 
+                            if ($this->input["command"] == "list") { ?>
                                 <a class="nav-link active" href="?command=list">List</a>
                             <?php } else { ?>
+                                <a class="nav-link" href="?command=list">List</a>
+                            <?php }} else { ?>
                                 <a class="nav-link" href="?command=list">List</a>
                             <?php } ?>
                         </li>
                         <li class="nav-item">
-                            <?php if ($this->input["command"] == "about") { ?>
+                            <?php if (isset($this->input["command"])) { 
+                            if ($this->input["command"] == "about") { ?>
                                 <a class="nav-link active" href="?command=about">About</a>
                             <?php } else { ?>
+                                <a class="nav-link" href="?command=about">About</a>
+                            <?php }} else { ?>
                                 <a class="nav-link" href="?command=about">About</a>
                             <?php } ?>
                         </li>
@@ -64,15 +78,18 @@
                     <!-- Login / Username Display-->
                     <ul class="navbar-nav d-flex">
                         <?php if (isset($_SESSION["signedin"]) && $_SESSION["signedin"]) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#"><?= $_SESSION["username"] ?></a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= $_SESSION["username"] ?></a>
+                                <ul class="dropdown-menu" data-bs-theme="light">
+                                    <li><a class="dropdown-item" href="#">Saved Locations</a></li>
+                                    <li><a class="dropdown-item" href="?command=profile">My Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="?command=logout">Log Out</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="?command=logout">Logout</a>
-                            </li> 
                         <?php } else { ?>
                             <li class="nav-item" id="loginButtonContainer">
-                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
                             </li>
                         <?php } ?>
                     </ul>
@@ -93,7 +110,8 @@
                         <form action="?command=login" method="post" id="loginForm">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" required 
+                                <?php if(isset($_COOKIE["email_cookie"])) { ?> value="<?= $_COOKIE["email_cookie"] ?> " <?php } ?>>
                                 <div class="invalid-feedback">Please enter a valid email address.</div>
                             </div>
                             <div class="mb-3">

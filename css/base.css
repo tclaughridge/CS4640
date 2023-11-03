@@ -2,15 +2,33 @@
 
 body {
     font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', sans-serif !important;
+
+    min-height: 100vh; 
+    margin: 0; 
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 .logo {
     font-weight: 300 !important;
 }
 
+.responsive-width {
+    max-width: 40% !important;
+}
+
+@media (max-width: 992px) {
+    .responsive-width {
+        max-width: 70% !important;
+    }
+}
+
 @media (max-width: 768px) {
     .divider {
         display: none;
+    }
+    .responsive-width {
+        max-width: 100% !important;
     }
 }
 

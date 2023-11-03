@@ -20,6 +20,11 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </head>
     <body>
-        
+        <div class="container">
+            <form action="?command=deleteUser" method="post" id="deleteForm" class="mx-auto">
+                <input type="hidden" id="delete" name="delete">
+                <button type="submit" class="btn btn-danger text-center">Delete Your Account</button>
+            </form>
+        </div>
     </body>
 </html>

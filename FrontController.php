@@ -1,5 +1,6 @@
 <?php
 
+// SITE URL: https://cs4640.cs.virginia.edu/tcl5tu/sprint3/?command=home
 class FrontController {
 
     private $input = [];
@@ -34,7 +35,7 @@ class FrontController {
                 $this->login();
                 break;
             case "signup":
-                $this->signup();
+                $this->showSignup();
                 break;
             case "logout":
                 $this->logout();
@@ -48,6 +49,15 @@ class FrontController {
             case "about":
                 $this->showAbout();
                 break;
+            case "manageFavorites":
+                $this->manageFavorites();
+                break;
+            case "profile":
+                $this->showProfile();
+                break;
+            case "deleteUser":
+                $this->deleteUser();
+                break;
             default:
                 $this->showHome();
                 break;
@@ -57,11 +67,11 @@ class FrontController {
     /**
      * Display a given page.
      */
-    public function display($page, $message = "") {
-        include "templates/navbar.php";
-        include "templates/$page.php";
-        include "templates/footer.php";
-        // ^ modify later to include from src/ directory
+    public function display($page, $message = "", $data = []) {
+        $path = "/students/tcl5tu/students/tcl5tu/src/sprint3/templates";
+        include "$path/navbar.php";
+        include "$path/$page.php";
+        include "$path/footer.php";
     }
 
     /**
@@ -86,7 +96,8 @@ class FrontController {
         if (!empty($this->errorMessage)) {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
-        $this->display("list", $message);
+        $arr = $this->listLocations();
+        $this->display("list", $message, $arr);
     }
     public function showAbout() {
         $message = "";
@@ -95,14 +106,86 @@ class FrontController {
         }
         $this->display("about", $message);
     }
+    public function showFavorites() {
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
+        }
+        $this->display("favorites", $message);
+    }
     public function showSignup() {
         $message = "";
         if (!empty($this->errorMessage)) {
             $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
         }
-        include "templates/signup.php";
-        include "templates/footer.php";
-        // ^^ modify later to include from src/ directory
+        $this->signup();
+        include "/students/tcl5tu/students/tcl5tu/src/sprint3/templates/signup.php";
+        include "/students/tcl5tu/students/tcl5tu/src/sprint3/templates/footer.php";
+    }
+    public function showProfile() {
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message .= "<p class='alert alert-danger'>".$this->errorMessage."</p>";
+        }
+        $this->display("profile", $message);
+    }
+
+    /**
+     * Retrieve locations from database and sort them by section
+     */
+    public function listLocations() {
+        $dorms = [];
+        $central = [];
+        $health = [];
+        $arts = [];
+        $misc = [];
+
+        $res = $this->db->query("select * from locations;");
+        if (!empty($res)) {
+            foreach ($res as $x) {
+                $location = array(
+                    "name" => $x["name"],
+                    "section" => $x["section"],
+                    "food" => $x["food"],
+                    "coffee" => $x["coffee"],
+                    "study" => $x["study"]
+                );
+
+                if ($x["section"] == "Dorms") {
+                    array_push($dorms, $location);
+                }
+                else if ($x["section"] == "Central Grounds") {
+                    array_push($central, $location);
+                }
+                else if ($x["section"] == "UVA Health") {
+                    array_push($health, $location);
+                }
+                else if ($x["section"] == "Arts Grounds") {
+                    array_push($arts, $location);
+                }
+                else {
+                    array_push($misc, $location);
+                }
+            }
+        }
+        else {
+            $this->errorMessage = "No locations found.";
+            return array();
+        }
+        return array($dorms, $central, $health, $arts, $misc);
+    }
+
+    public function manageFavorites() {
+        if (isset($_POST["location"])) {
+            $res = $this->db->query("select * from userfavorites where user_id = $1 and location_id = $2;", $_SESSION["email"], $_POST["location"]);
+            if (empty($res)) {
+                $this->db->query("insert into userfavorites (user_id, location_id) values ($1, $2);", $_SESSION["email"], $_POST["location"]);
+            }
+            else {
+                $this->db->query("delete from userfavorites where user_id = $1 and location_id = $2;", $_SESSION["email"], $_POST["location"]);
+            }
+        }
+        header("Location: ?command=list");
     }
 
     /**
@@ -121,6 +204,7 @@ class FrontController {
                     $_SESSION["username"] = $res[0]["username"];
                     $_SESSION["email"] = $res[0]["email"];
                     $_SESSION["signedin"] = true;
+                    setcookie('email_cookie', $_SESSION["email"], time() + (86400 * 30), "/");
                     header("Location: ?command=home");
                     return;
                 } else {
@@ -128,7 +212,7 @@ class FrontController {
                 }
             } else {
                 // User not in database, go to sign up
-                $this->signup();
+                $this->errorMessage = "No account found with this email, please <a href='?command=signup'>sign up</a>.";
             }
         } else {
             $this->errorMessage = "Please enter your email and password.";
@@ -141,10 +225,14 @@ class FrontController {
      * Handle user registration
      */
     public function signup() {
-        $this->showSignup();
-
         if (isset($_POST["username"]) && !empty($_POST["username"]) && isset($_POST["email"]) 
         && !empty($_POST["email"]) && isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
+            $pattern = "/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)$/";
+            if (!preg_match($pattern, $_POST["passwd"])) {
+                $this->errorMessage = "Password must contain at least one number, one uppercase letter, one lowercase letter, and one special character.";
+                return;
+            }
+
             // Check if user is in database
             $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
             if (empty($res)) {
@@ -158,14 +246,26 @@ class FrontController {
                 $_SESSION["username"] = $_POST["username"];
                 $_SESSION["email"] = $_POST["email"];
                 $_SESSION["signedin"] = true;
+                setcookie('email_cookie', $_SESSION["email"], time() + (86400 * 30), "/");
+                header("Location: ?command=home");
                 return;
             } else {
-                // User in database, redirect to home
+                // User in database, redirect to login
                 $this->errorMessage = "There is already an account associated with this email, please sign in.";
                 $this->showHome();
+                return;
             }
         } else {
             $this->errorMessage = "Username, email, and password are required.";
+        }
+    }
+
+    public function deleteUser() {
+        if (isset($_POST["delete"])) {
+            $res = $this->db->query("delete * from users where email = $1;", $_SESSION["email"]);
+            $this->logout();
+        } else {
+            $this->errorMessage = "No user found";
         }
     }
 
@@ -189,8 +289,7 @@ class FrontController {
             header('Content-Type: application/json');
             echo json_encode($userInfo);
         } else {
-            header('HTTP/1.1 404 Not Found');
-            echo "User not found";
+            $this->errorMessage = "No user found.";
         }
     }
 }
